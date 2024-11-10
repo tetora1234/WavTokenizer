@@ -73,8 +73,8 @@ if __name__ == '__main__':
         evaluate_utmos=True,             # UTMOSスコアを評価するかどうか
         evaluate_pesq=True,              # PESQスコアを評価するかどうか
         evaluate_periodicty=True,        # 周期性を評価するかどうか
-        resume=False,                    # 学習を再開するかどうか
-        resume_config = r"C:\Users\user\Desktop\git\WavTokenizer\configs\test.yaml",  # 再開用の設定ファイル
+        resume=True,                    # 学習を再開するかどうか
+        resume_config = r"C:\Users\user\Desktop\git\WavTokenizer\configs\wavtokenizer_smalldata_frame75_3s_nq1_code4096_dim512_kmeans200_attn.yaml",  # 再開用の設定ファイル
         resume_model = r"C:\Users\user\Desktop\git\WavTokenizer\models\wavtokenizer_large_speech_320_24k.ckpt",  # 再開用のモデルチェックポイント
         feature_extractor=feature_extractor,
         backbone=backbone,
