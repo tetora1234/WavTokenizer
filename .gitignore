@@ -1,3 +1,4 @@
 # Ignore models folder
 models/
 metrics/
+result/

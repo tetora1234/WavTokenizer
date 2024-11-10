@@ -74,8 +74,8 @@ if __name__ == '__main__':
         evaluate_pesq=True,              # PESQスコアを評価するかどうか
         evaluate_periodicty=True,        # 周期性を評価するかどうか
         resume=False,                    # 学習を再開するかどうか
-        resume_config="./WavTokenizer/configs/wavtokenizer_smalldata_frame75_3s_nq1_code16384_dim512_kmeans800_attn.yaml",  # 再開用の設定ファイル
-        resume_model="./WavTokenizer/result/train/wavtokenizer_smalldata_frame75_3s_nq1_code16384_dim512_kmeans800_attn/xxx.ckpt",  # 再開用のモデルチェックポイント
+        resume_config = r"C:\Users\user\Desktop\git\WavTokenizer\configs\test.yaml",  # 再開用の設定ファイル
+        resume_model = r"C:\Users\user\Desktop\git\WavTokenizer\models\wavtokenizer_large_speech_320_24k.ckpt",  # 再開用のモデルチェックポイント
         feature_extractor=feature_extractor,
         backbone=backbone,
         head=head
@@ -87,6 +87,7 @@ if __name__ == '__main__':
         ModelSummary(max_depth=2),       # モデル構造のサマリー出力
         ModelCheckpoint(
             monitor="val_loss",          # 監視する評価指標
+            dirpath="./result/models",
             filename="wavtokenizer_checkpoint_{epoch}_{step}_{val_loss:.4f}",  # チェックポイントのファイル名フォーマット
             save_top_k=10,               # 保存する上位k個のモデル数
             save_last=True,               # 最後のモデルを保存するかどうか
@@ -97,7 +98,7 @@ if __name__ == '__main__':
 
     # TensorBoard用ロガーの設定
     logger = TensorBoardLogger(
-        save_dir="./WavTokenizer/result/train/wavtokenizer_smalldata_frame75_3s_nq1_code4096_dim512_kmeans200_attn/"  # ログの保存ディレクトリ
+        save_dir="./result/train/test/"  # ログの保存ディレクトリ
     )
 
     # トレーナーの設定
@@ -112,7 +113,7 @@ if __name__ == '__main__':
     )
 
     # TensorBoardをバックグラウンドで起動
-    log_dir = "./WavTokenizer/result/train/wavtokenizer_smalldata_frame75_3s_nq1_code4096_dim512_kmeans200_attn/"
+    log_dir = "./result/train/test/"
     tensorboard_process = subprocess.Popen(["tensorboard", "--logdir", log_dir])
 
     # ブラウザでTensorBoardを開く
