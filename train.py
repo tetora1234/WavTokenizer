@@ -8,6 +8,8 @@ from decoder.feature_extractors import EncodecFeatures
 from decoder.models import VocosBackbone
 from decoder.heads import ISTFTHead
 from decoder.helpers import GradNormCallback
+import subprocess
+import webbrowser
 
 # 実験の再現性のために乱数シードを固定
 seed_everything(3407)
@@ -87,7 +89,8 @@ if __name__ == '__main__':
             monitor="val_loss",          # 監視する評価指標
             filename="wavtokenizer_checkpoint_{epoch}_{step}_{val_loss:.4f}",  # チェックポイントのファイル名フォーマット
             save_top_k=10,               # 保存する上位k個のモデル数
-            save_last=True               # 最後のモデルを保存するかどうか
+            save_last=True,               # 最後のモデルを保存するかどうか
+            every_n_epochs=1,        # エポックごとに保存
         ),
         GradNormCallback()               # 勾配正規化のコールバック
     ]
@@ -108,5 +111,15 @@ if __name__ == '__main__':
         log_every_n_steps=1          # ログを出力するステップ間隔
     )
 
+    # TensorBoardをバックグラウンドで起動
+    log_dir = "./WavTokenizer/result/train/wavtokenizer_smalldata_frame75_3s_nq1_code4096_dim512_kmeans200_attn/"
+    tensorboard_process = subprocess.Popen(["tensorboard", "--logdir", log_dir])
+
+    # ブラウザでTensorBoardを開く
+    webbrowser.open("http://localhost:6006")
+
     # モデルの学習を開始
     trainer.fit(model, data_module)
+
+    # トレーニング終了後、TensorBoardのプロセスを終了
+    tensorboard_process.terminate()
