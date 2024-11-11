@@ -19,14 +19,14 @@ if __name__ == '__main__':
     # データモジュールの設定
     data_module = VocosDataModule(
         train_params={
-            "filelist_path": "C:/Users/user/Desktop/git/WavTokenizer/data/demo.txt",  # 学習データのファイルリストパス
+            "filelist_path": r"C:\Users\user\Desktop\git\WavTokenizer\data\file_list.txt",  # 学習データのファイルリストパス
             "sampling_rate": 24000,      # サンプリングレート(Hz)
             "num_samples": 72000,        # 1つのオーディオサンプルの長さ（3秒分）
             "batch_size": 1,             # バッチサイズ
             "num_workers": 1             # データローダーのワーカー数
         },
         val_params={
-            "filelist_path": "C:/Users/user/Desktop/git/WavTokenizer/data/demo.txt",  # 検証データのファイルリストパス
+            "filelist_path": r"C:\Users\user\Desktop\git\WavTokenizer\data\file_list.txt",  # 検証データのファイルリストパス
             "sampling_rate": 24000,      # サンプリングレート(Hz)
             "num_samples": 72000,        # 1つのオーディオサンプルの長さ（3秒分）
             "batch_size": 1,             # バッチサイズ
