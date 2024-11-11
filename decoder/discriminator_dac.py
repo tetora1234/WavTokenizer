@@ -72,7 +72,7 @@ class MPD(nn.Module):
 
 
 class MSD(nn.Module):
-    def __init__(self, rate: int = 1, sample_rate: int = 24000):
+    def __init__(self, rate: int = 1, sample_rate: int = 48000):
         super().__init__()
         self.convs = nn.ModuleList(
             [
@@ -112,7 +112,7 @@ class MRD(nn.Module):
         self,
         window_length: int,
         hop_factor: float = 0.25,
-        sample_rate: int = 24000,
+        sample_rate: int = 48000,
         bands: list = BANDS,
     ):
         """Complex multi-band spectrogram discriminator.
@@ -123,7 +123,7 @@ class MRD(nn.Module):
         hop_factor : float, optional
             Hop factor of the STFT, defaults to ``0.25 * window_length``.
         sample_rate : int, optional
-            Sampling rate of audio in Hz, by default 24000
+            Sampling rate of audio in Hz, by default 48000
         bands : list, optional
             Bands to run discriminator over.
         """
@@ -198,7 +198,7 @@ class DACDiscriminator(nn.Module):
         rates: list = [],
         periods: list = [2, 3, 5, 7, 11],
         fft_sizes: list = [2048, 1024, 512],
-        sample_rate: int = 24000,
+        sample_rate: int = 48000,
         bands: list = BANDS,
     ):
         """Discriminator that combines multiple discriminators.
@@ -213,7 +213,7 @@ class DACDiscriminator(nn.Module):
         fft_sizes : list, optional
             Window sizes of the FFT to run MRD at, by default [2048, 1024, 512]
         sample_rate : int, optional
-            Sampling rate of audio in Hz, by default 24000
+            Sampling rate of audio in Hz, by default 48000
         bands : list, optional
             Bands to run MRD at, by default `BANDS`
         """
@@ -239,7 +239,7 @@ class DACDiscriminator(nn.Module):
 
 if __name__ == "__main__":
     disc = DACDiscriminator()
-    x = torch.zeros(1, 1, 24000)
+    x = torch.zeros(1, 1, 48000)
     results = disc(x)
     breakpoint()
     for i, result in enumerate(results):

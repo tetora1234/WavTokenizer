@@ -6,8 +6,8 @@ from decoder.pretrained import WavTokenizer
 
 device = torch.device('cpu')
 
-config_path = r"C:\Users\user\Desktop\git\WavTokenizer\configs\wavtokenizer_smalldata_frame75_3s_nq1_code4096_dim512_kmeans200_attn.yaml"
-model_path = r"C:\Users\user\Desktop\git\WavTokenizer\result\models\wavtokenizer_checkpoint_epoch=0_step=4_val_loss=8.0469.ckpt"
+config_path = r"C:\Users\user\Desktop\git\WavTokenizer\configs\pre.yaml"
+model_path = r"C:\Users\user\Desktop\git\WavTokenizer\result\models\pre.ckpt"
 input_dir = r"C:\Users\user\Desktop\git\WavTokenizer\inputs"  # 入力音声が保存されているディレクトリ
 output_dir = r"C:\Users\user\Desktop\git\WavTokenizer\outputs"  # 出力音声を保存するディレクトリ
 
@@ -25,7 +25,7 @@ for filename in os.listdir(input_dir):
         wav, sr = torchaudio.load(input_filepath)
 
         # 音声の変換
-        wav = convert_audio(wav, sr, 24000, 1)
+        wav = convert_audio(wav, sr, 48000, 1)
         bandwidth_id = torch.tensor([0])
         wav = wav.to(device)
 
@@ -38,6 +38,6 @@ for filename in os.listdir(input_dir):
         output_filepath = os.path.join(output_dir, output_filename)
 
         # 音声を保存
-        torchaudio.save(output_filepath, audio_out, sample_rate=24000, encoding='PCM_S', bits_per_sample=16)
+        torchaudio.save(output_filepath, audio_out, sample_rate=48000, encoding='PCM_S', bits_per_sample=16)
 
         print(f"Processed and saved: {output_filename}")

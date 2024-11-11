@@ -236,18 +236,3 @@ class SEANetDecoder(nn.Module):
     def forward(self, z):
         y = self.model(z)
         return y
-
-
-def test():
-    import torch
-    encoder = SEANetEncoder()
-    decoder = SEANetDecoder()
-    x = torch.randn(1, 1, 24000)
-    z = encoder(x)
-    assert list(z.shape) == [1, 128, 75], z.shape
-    y = decoder(z)
-    assert y.shape == x.shape, (x.shape, y.shape)
-
-
-if __name__ == '__main__':
-    test()

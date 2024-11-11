@@ -1,3 +1,6 @@
+import os
+os.environ["CUDA_VISIBLE_DEVICES"] = "1"
+
 import pytorch_lightning as pl
 from pytorch_lightning.loggers import TensorBoardLogger
 from pytorch_lightning.callbacks import LearningRateMonitor, ModelSummary, ModelCheckpoint
@@ -19,16 +22,16 @@ if __name__ == '__main__':
     # データモジュールの設定
     data_module = VocosDataModule(
         train_params={
-            "filelist_path": "C:/Users/user/Desktop/git/WavTokenizer/data/demo.txt",  # 学習データのファイルリストパス
-            "sampling_rate": 24000,      # サンプリングレート(Hz)
-            "num_samples": 72000,        # 1つのオーディオサンプルの長さ（3秒分）
-            "batch_size": 1,             # バッチサイズ
+            "filelist_path": r"C:\Users\user\Desktop\git\WavTokenizer\data\file_list.txt",  # 学習データのファイルリストパス
+            "sampling_rate": 48000,      # サンプリングレート(Hz)
+            "num_samples": 144000,        # 1つのオーディオサンプルの長さ（3秒分）
+            "batch_size": 4,             # バッチサイズ
             "num_workers": 1             # データローダーのワーカー数
         },
         val_params={
-            "filelist_path": "C:/Users/user/Desktop/git/WavTokenizer/data/demo.txt",  # 検証データのファイルリストパス
-            "sampling_rate": 24000,      # サンプリングレート(Hz)
-            "num_samples": 72000,        # 1つのオーディオサンプルの長さ（3秒分）
+            "filelist_path": r"C:\Users\user\Desktop\git\WavTokenizer\data\file_list.txt",  # 検証データのファイルリストパス
+            "sampling_rate": 48000,      # サンプリングレート(Hz)
+            "num_samples": 144000,        # 1つのオーディオサンプルの長さ（3秒分）
             "batch_size": 1,             # バッチサイズ
             "num_workers": 1             # データローダーのワーカー数
         }
@@ -36,7 +39,7 @@ if __name__ == '__main__':
 
     # 特徴量抽出器の設定
     feature_extractor = EncodecFeatures(
-        encodec_model="encodec_24khz",   # 使用するEncodecモデル
+        encodec_model="encodec_48khz",   # 使用するEncodecモデル
         bandwidths=[6.6, 6.6, 6.6, 6.6], # 各レイヤーの帯域幅
         train_codebooks=True,            # コードブックを学習させるかどうか
         num_quantizers=1,                # 量子化器の数
@@ -64,8 +67,8 @@ if __name__ == '__main__':
 
     # モデル全体の設定
     model = WavTokenizer(
-        sample_rate=24000,               # サンプリングレート(Hz)
-        initial_learning_rate=2e-4,      # 初期学習率
+        sample_rate=48000,               # サンプリングレート(Hz)
+        initial_learning_rate=1e-6,      # 初期学習率
         mel_loss_coeff=45,               # メルスペクトログラム損失の係数
         mrd_loss_coeff=1.0,              # Multi-Resolution Discriminator損失の係数
         num_warmup_steps=0,              # ウォームアップステップ数
@@ -73,9 +76,9 @@ if __name__ == '__main__':
         evaluate_utmos=True,             # UTMOSスコアを評価するかどうか
         evaluate_pesq=True,              # PESQスコアを評価するかどうか
         evaluate_periodicty=True,        # 周期性を評価するかどうか
-        resume=True,                    # 学習を再開するかどうか
-        resume_config = r"C:\Users\user\Desktop\git\WavTokenizer\configs\wavtokenizer_smalldata_frame75_3s_nq1_code4096_dim512_kmeans200_attn.yaml",  # 再開用の設定ファイル
-        resume_model = r"C:\Users\user\Desktop\git\WavTokenizer\models\wavtokenizer_large_speech_320_24k.ckpt",  # 再開用のモデルチェックポイント
+        resume=False,                    # 学習を再開するかどうか
+        resume_config = r"C:\Users\user\Desktop\git\WavTokenizer\configs\48hz.yaml",  # 再開用の設定ファイル
+        resume_model = r"C:\Users\user\Desktop\git\WavTokenizer\result\models\last.ckpt",  # 再開用のモデルチェックポイント
         feature_extractor=feature_extractor,
         backbone=backbone,
         head=head
@@ -109,7 +112,8 @@ if __name__ == '__main__':
         limit_val_batches=100,          # 検証時のバッチ数制限
         accelerator="gpu",              # 使用するアクセラレータ（GPU）
         devices=1,                      # 使用するGPUの数
-        log_every_n_steps=1          # ログを出力するステップ間隔
+        val_check_interval=0.25,  # 25%ごとに検証
+        log_every_n_steps=1,          # ログを出力するステップ間隔
     )
 
     # TensorBoardをバックグラウンドで起動

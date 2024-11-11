@@ -28,7 +28,7 @@ class FeatureExtractor(nn.Module):
 
 
 class MelSpectrogramFeatures(FeatureExtractor):
-    def __init__(self, sample_rate=24000, n_fft=1024, hop_length=256, n_mels=100, padding="center"):
+    def __init__(self, sample_rate=48000, n_fft=1024, hop_length=256, n_mels=100, padding="center"):
         super().__init__()
         if padding not in ["center", "same"]:
             raise ValueError("Padding must be 'center' or 'same'.")
@@ -73,7 +73,7 @@ class EncodecFeatures(FeatureExtractor):
                                 kernel_size=7, residual_kernel_size=3, last_kernel_size=7, dilation_base=2,
                                 true_skip=False, compress=2)
         decoder = SEANetDecoder(causal=False, n_residual_layers=1, norm='weight_norm', pad_mode='reflect', lstm=2,
-                                dimension=512, channels=1, n_filters=32, ratios=[8, 5, 4, 2], activation='ELU',
+                                dimension=512, channels=1, n_filters=32, ratios=dowmsamples, activation='ELU',
                                 kernel_size=7, residual_kernel_size=3, last_kernel_size=7, dilation_base=2,
                                 true_skip=False, compress=2)
         quantizer = ResidualVectorQuantizer(dimension=512, n_q=n_q, bins=vq_bins, kmeans_iters=vq_kmeans,
@@ -82,7 +82,10 @@ class EncodecFeatures(FeatureExtractor):
         # breakpoint()
         if encodec_model == "encodec_24khz":
             self.encodec = EncodecModel(encoder=encoder, decoder=decoder, quantizer=quantizer,
-                                        target_bandwidths=bandwidths, sample_rate=24000, channels=1)
+                                        target_bandwidths=bandwidths, sample_rate=48000, channels=1)
+        elif encodec_model == "encodec_48khz":
+                self.encodec = EncodecModel(encoder=encoder, decoder=decoder, quantizer=quantizer,
+                                            target_bandwidths=bandwidths, sample_rate=48000, channels=1)
         else:
             raise ValueError(
                 f"Unsupported encodec_model: {encodec_model}. Supported options are 'encodec_24khz'."
@@ -105,7 +108,7 @@ class EncodecFeatures(FeatureExtractor):
         if self.training:
             self.encodec.train()
 
-        audio = audio.unsqueeze(1)                  # audio(16,24000)
+        audio = audio.unsqueeze(1)                  # audio(16,48000)
 
         # breakpoint()
 
@@ -131,7 +134,7 @@ class EncodecFeatures(FeatureExtractor):
         if self.training:
             self.encodec.train()
 
-        audio = audio.unsqueeze(1)                  # audio(16,24000)
+        audio = audio.unsqueeze(1)                  # audio(16,48000)
         emb = self.encodec.encoder(audio)
         q_res = self.encodec.quantizer.infer(emb, self.frame_rate, bandwidth=self.bandwidths[bandwidth_id])
         quantized = q_res.quantized
