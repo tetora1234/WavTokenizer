@@ -1,3 +1,6 @@
+import os
+os.environ["CUDA_VISIBLE_DEVICES"] = "1"
+
 import pytorch_lightning as pl
 from pytorch_lightning.loggers import TensorBoardLogger
 from pytorch_lightning.callbacks import LearningRateMonitor, ModelSummary, ModelCheckpoint
@@ -22,7 +25,7 @@ if __name__ == '__main__':
             "filelist_path": r"C:\Users\user\Desktop\git\WavTokenizer\data\file_list.txt",  # 学習データのファイルリストパス
             "sampling_rate": 24000,      # サンプリングレート(Hz)
             "num_samples": 72000,        # 1つのオーディオサンプルの長さ（3秒分）
-            "batch_size": 1,             # バッチサイズ
+            "batch_size": 10,             # バッチサイズ
             "num_workers": 1             # データローダーのワーカー数
         },
         val_params={
@@ -106,7 +109,7 @@ if __name__ == '__main__':
         logger=logger,                   
         callbacks=callbacks,              
         max_steps=20000000,             # 最大トレーニングステップ数
-        limit_val_batches=100,          # 検証時のバッチ数制限
+        limit_val_batches=10,          # 検証時のバッチ数制限
         accelerator="gpu",              # 使用するアクセラレータ（GPU）
         devices=1,                      # 使用するGPUの数
         log_every_n_steps=1          # ログを出力するステップ間隔
