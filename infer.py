@@ -20,24 +20,24 @@ wavtokenizer = wavtokenizer.to(device)
 
 # 入力ディレクトリ内のすべての.wavファイルを処理
 for filename in os.listdir(input_dir):
-    if filename.endswith(".wav"):
-        input_filepath = os.path.join(input_dir, filename)
-        wav, sr = torchaudio.load(input_filepath)
+    input_filepath = os.path.join(input_dir, filename)
+    wav, sr = torchaudio.load(input_filepath)
 
-        # 音声の変換
-        wav = convert_audio(wav, sr, 24000, 1)
-        bandwidth_id = torch.tensor([0])
-        wav = wav.to(device)
+    # 音声の変換
+    wav = convert_audio(wav, sr, 24000, 1)
+    bandwidth_id = torch.tensor([0])
+    wav = wav.to(device)
 
-        # エンコードとデコード
-        features, discrete_code = wavtokenizer.encode_infer(wav, bandwidth_id=bandwidth_id)
-        audio_out = wavtokenizer.decode(features, bandwidth_id=bandwidth_id)
+    # エンコードとデコード
+    features, discrete_code = wavtokenizer.encode_infer(wav, bandwidth_id=bandwidth_id)
+    print(discrete_code)
+    audio_out = wavtokenizer.decode(features, bandwidth_id=bandwidth_id)
 
-        # 出力ファイル名を入力ファイル名に「_processed」を付けて決定
-        output_filename = os.path.splitext(filename)[0] + "_processed.wav"  # 拡張子の前に「_processed」を追加
-        output_filepath = os.path.join(output_dir, output_filename)
+    # 出力ファイル名を入力ファイル名に「_processed」を付けて決定
+    output_filename = os.path.splitext(filename)[0] + "_processed.wav"  # 拡張子の前に「_processed」を追加
+    output_filepath = os.path.join(output_dir, output_filename)
 
-        # 音声を保存
-        torchaudio.save(output_filepath, audio_out, sample_rate=24000, encoding='PCM_S', bits_per_sample=16)
+    # 音声を保存
+    torchaudio.save(output_filepath, audio_out, sample_rate=24000, encoding='PCM_S', bits_per_sample=16)
 
-        print(f"Processed and saved: {output_filename}")
+    print(f"Processed and saved: {output_filename}")
