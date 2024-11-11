@@ -15,7 +15,7 @@ class MelSpecReconstructionLoss(nn.Module):
     """
 
     def __init__(
-        self, sample_rate: int = 24000, n_fft: int = 1024, hop_length: int = 256, n_mels: int = 100,
+        self, sample_rate: int = 48000, n_fft: int = 1024, hop_length: int = 256, n_mels: int = 100,
     ):
         super().__init__()
         self.mel_spec = torchaudio.transforms.MelSpectrogram(

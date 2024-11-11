@@ -131,8 +131,8 @@ class MultiScaleSTFTDiscriminator(nn.Module):
 
 def test():
     disc = MultiScaleSTFTDiscriminator(filters=32)
-    y = torch.randn(1, 1, 24000)
-    y_hat = torch.randn(1, 1, 24000)
+    y = torch.randn(1, 1, 48000)
+    y_hat = torch.randn(1, 1, 48000)
 
     y_disc_r, fmap_r = disc(y)
     y_disc_gen, fmap_gen = disc(y_hat)

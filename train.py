@@ -23,15 +23,15 @@ if __name__ == '__main__':
     data_module = VocosDataModule(
         train_params={
             "filelist_path": r"C:\Users\user\Desktop\git\WavTokenizer\data\file_list.txt",  # 学習データのファイルリストパス
-            "sampling_rate": 24000,      # サンプリングレート(Hz)
-            "num_samples": 72000,        # 1つのオーディオサンプルの長さ（3秒分）
+            "sampling_rate": 48000,      # サンプリングレート(Hz)
+            "num_samples": 144000,        # 1つのオーディオサンプルの長さ（3秒分）
             "batch_size": 10,             # バッチサイズ
             "num_workers": 1             # データローダーのワーカー数
         },
         val_params={
             "filelist_path": r"C:\Users\user\Desktop\git\WavTokenizer\data\file_list.txt",  # 検証データのファイルリストパス
-            "sampling_rate": 24000,      # サンプリングレート(Hz)
-            "num_samples": 72000,        # 1つのオーディオサンプルの長さ（3秒分）
+            "sampling_rate": 48000,      # サンプリングレート(Hz)
+            "num_samples": 144000,        # 1つのオーディオサンプルの長さ（3秒分）
             "batch_size": 1,             # バッチサイズ
             "num_workers": 1             # データローダーのワーカー数
         }
@@ -39,7 +39,7 @@ if __name__ == '__main__':
 
     # 特徴量抽出器の設定
     feature_extractor = EncodecFeatures(
-        encodec_model="encodec_24khz",   # 使用するEncodecモデル
+        encodec_model="encodec_48khz",   # 使用するEncodecモデル
         bandwidths=[6.6, 6.6, 6.6, 6.6], # 各レイヤーの帯域幅
         train_codebooks=True,            # コードブックを学習させるかどうか
         num_quantizers=1,                # 量子化器の数
@@ -67,7 +67,7 @@ if __name__ == '__main__':
 
     # モデル全体の設定
     model = WavTokenizer(
-        sample_rate=24000,               # サンプリングレート(Hz)
+        sample_rate=48000,               # サンプリングレート(Hz)
         initial_learning_rate=2e-4,      # 初期学習率
         mel_loss_coeff=45,               # メルスペクトログラム損失の係数
         mrd_loss_coeff=1.0,              # Multi-Resolution Discriminator損失の係数

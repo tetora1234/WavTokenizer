@@ -101,7 +101,7 @@ class DiscriminatorP(nn.Module):
 class MultiResolutionDiscriminator(nn.Module):
     def __init__(
         self,
-        resolutions: Tuple[Tuple[int, int, int]] = ((1024, 256, 1024), (2048, 512, 2048), (512, 128, 512)),
+        resolutions: Tuple[Tuple[int, int, int]] = ((2048, 512, 2048), (4096, 1024, 4096), (1024, 256, 1024)),
         num_embeddings: int = None,
     ):
         """

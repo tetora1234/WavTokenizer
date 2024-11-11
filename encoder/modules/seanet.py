@@ -242,7 +242,7 @@ def test():
     import torch
     encoder = SEANetEncoder()
     decoder = SEANetDecoder()
-    x = torch.randn(1, 1, 24000)
+    x = torch.randn(1, 1, 48000)
     z = encoder(x)
     assert list(z.shape) == [1, 128, 75], z.shape
     y = decoder(z)
