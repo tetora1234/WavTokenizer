@@ -29,14 +29,15 @@ for filename in os.listdir(input_dir):
     wav = wav.to(device)
 
     # エンコードとデコード
+    # 本来はLLMでdiscrete_codeを作る
     features, discrete_code = wavtokenizer.encode_infer(wav, bandwidth_id=bandwidth_id)
+
+    #LLMがdiscrete_codeを出したとして処理
+    features = wavtokenizer.codes_to_features(discrete_code)
     audio_out = wavtokenizer.decode(features, bandwidth_id=bandwidth_id)
 
     # 出力ファイル名を入力ファイル名に「_processed」を付けて決定
     output_filename = os.path.splitext(filename)[0] + "_processed.wav"  # 拡張子の前に「_processed」を追加
     output_filepath = os.path.join(output_dir, output_filename)
-
-    # 音声を保存
     torchaudio.save(output_filepath, audio_out, sample_rate=48000, encoding='PCM_S', bits_per_sample=32)
-
-    print(f"output_filename: {output_filename}\ndiscrete_code.size:{discrete_code.size(-1)}\ndiscrete_code:{discrete_code}\n\n")
+    print(f"output_filename: {output_filename}\ndiscrete_code.size:{discrete_code.size(-1)}\n")
