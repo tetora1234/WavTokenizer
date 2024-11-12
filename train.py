@@ -1,6 +1,7 @@
 import os
-os.environ["CUDA_VISIBLE_DEVICES"] = "1"
+#os.environ["CUDA_VISIBLE_DEVICES"] = "1"
 
+import datetime
 import pytorch_lightning as pl
 from pytorch_lightning.loggers import TensorBoardLogger
 from pytorch_lightning.callbacks import LearningRateMonitor, ModelSummary, ModelCheckpoint
@@ -76,13 +77,17 @@ if __name__ == '__main__':
         evaluate_utmos=True,             # UTMOSスコアを評価するかどうか
         evaluate_pesq=True,              # PESQスコアを評価するかどうか
         evaluate_periodicty=True,        # 周期性を評価するかどうか
-        resume=False,                    # 学習を再開するかどうか
-        resume_config = r"C:\Users\user\Desktop\git\WavTokenizer\configs\x.yaml",  # 再開用の設定ファイル
-        resume_model = r"C:\Users\user\Desktop\git\WavTokenizer\models\x.ckpt",  # 再開用のモデルチェックポイント
+        resume=True,                    # 学習を再開するかどうか
+        resume_config = r"C:\Users\user\Desktop\git\WavTokenizer\configs\48hz.yaml",  # 再開用の設定ファイル
+        resume_model = r"C:\Users\user\Desktop\git\WavTokenizer\models\last.ckpt",  # 再開用のモデルチェックポイント
         feature_extractor=feature_extractor,
         backbone=backbone,
         head=head
     )
+
+    # 現在の時刻を取得して、hhmmss形式でフォルダ名に追加
+    current_time = datetime.datetime.now().strftime("%H%M%S")
+    output_dir = f"./result/train/{current_time}/"  # hhmmss形式の時刻をフォルダ名に組み込む
 
     # トレーニング用コールバックの設定
     callbacks = [
@@ -90,18 +95,18 @@ if __name__ == '__main__':
         ModelSummary(max_depth=2),       # モデル構造のサマリー出力
         ModelCheckpoint(
             monitor="val_loss",          # 監視する評価指標
-            dirpath="./result/models",
-            filename="wavtokenizer_checkpoint_{epoch}_{step}_{val_loss:.4f}",  # チェックポイントのファイル名フォーマット
+            dirpath=f"{output_dir}/models",
+            filename="checkpoint_{epoch}_{step}_{val_loss:.4f}",  # チェックポイントのファイル名フォーマット
             save_top_k=10,               # 保存する上位k個のモデル数
-            save_last=True,               # 最後のモデルを保存するかどうか
-            every_n_epochs=1,        # エポックごとに保存
+            save_last=True,              # 最後のモデルを保存するかどうか
+            every_n_epochs=1,            # エポックごとに保存
         ),
         GradNormCallback()               # 勾配正規化のコールバック
     ]
 
     # TensorBoard用ロガーの設定
     logger = TensorBoardLogger(
-        save_dir="./result/train/test/"  # ログの保存ディレクトリ
+        save_dir=output_dir  # フォルダ名に時刻が追加されたものを指定
     )
 
     # トレーナーの設定
@@ -109,15 +114,14 @@ if __name__ == '__main__':
         logger=logger,                   
         callbacks=callbacks,              
         max_steps=20000000,             # 最大トレーニングステップ数
-        limit_val_batches=10,          # 検証時のバッチ数制限
+        limit_val_batches=10,           # 検証時のバッチ数制限
         accelerator="gpu",              # 使用するアクセラレータ（GPU）
-        devices=1,                      # 使用するGPUの数
-        log_every_n_steps=1          # ログを出力するステップ間隔
+        gpus = [1],                      # 使用するGPUの数
+        log_every_n_steps=1             # ログを出力するステップ間隔
     )
 
     # TensorBoardをバックグラウンドで起動
-    log_dir = "./result/train/test/"
-    tensorboard_process = subprocess.Popen(["tensorboard", "--logdir", log_dir])
+    tensorboard_process = subprocess.Popen(["tensorboard", "--logdir", output_dir])
 
     # ブラウザでTensorBoardを開く
     webbrowser.open("http://localhost:6006")
