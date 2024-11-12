@@ -7,7 +7,7 @@ from decoder.pretrained import WavTokenizer
 device = torch.device('cpu')
 
 config_path = r"C:\Users\user\Desktop\git\WavTokenizer\configs\48hz.yaml"
-model_path = r"C:\Users\user\Desktop\git\WavTokenizer\result\train\180638\models\last.ckpt"
+model_path = r"C:\Users\user\Desktop\git\WavTokenizer\result\train\041620\models\last.ckpt"
 input_dir = r"C:\Users\user\Desktop\git\WavTokenizer\inputs"  # 入力音声が保存されているディレクトリ
 output_dir = r"C:\Users\user\Desktop\git\WavTokenizer\outputs"  # 出力音声を保存するディレクトリ
 
