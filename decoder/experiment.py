@@ -192,7 +192,7 @@ class VocosExp(pl.LightningModule):
             self.log("generator/mel_loss", mel_loss)
             self.log("commit_loss", commit_loss)
 
-            if self.global_step % 1000 == 0 and self.global_rank == 0:
+            if self.global_step % 250 == 0 and self.global_rank == 0:
                 self.logger.experiment.add_audio(
                     "train/audio_in", audio_input[0].data.cpu(), self.global_step, self.hparams.sample_rate
                 )

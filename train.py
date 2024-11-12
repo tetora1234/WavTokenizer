@@ -69,7 +69,7 @@ if __name__ == '__main__':
     # モデル全体の設定
     model = WavTokenizer(
         sample_rate=48000,               # サンプリングレート(Hz)
-        initial_learning_rate=2e-3,      # 初期学習率
+        initial_learning_rate=0.001,      # 初期学習率
         mel_loss_coeff=45,               # メルスペクトログラム損失の係数
         mrd_loss_coeff=1.0,              # Multi-Resolution Discriminator損失の係数
         num_warmup_steps=0,              # ウォームアップステップ数
