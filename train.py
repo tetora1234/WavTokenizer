@@ -1,11 +1,10 @@
 import os
-#os.environ["CUDA_VISIBLE_DEVICES"] = "1"
+os.environ["CUDA_VISIBLE_DEVICES"] = "1"
 
 import datetime
 import pytorch_lightning as pl
 from pytorch_lightning.loggers import TensorBoardLogger
 from pytorch_lightning.callbacks import LearningRateMonitor, ModelSummary, ModelCheckpoint
-from pytorch_lightning import seed_everything
 from decoder.dataset import VocosDataModule
 from decoder.experiment import WavTokenizer
 from decoder.feature_extractors import EncodecFeatures
@@ -15,9 +14,6 @@ from decoder.helpers import GradNormCallback
 import subprocess
 import webbrowser
 
-# 実験の再現性のために乱数シードを固定
-seed_everything(3407)
-
 if __name__ == '__main__':
 
     # データモジュールの設定
@@ -26,14 +22,14 @@ if __name__ == '__main__':
             "filelist_path": r"C:\Users\user\Desktop\git\WavTokenizer\data\file_list.txt",  # 学習データのファイルリストパス
             "sampling_rate": 48000,      # サンプリングレート(Hz)
             "num_samples": 144000,        # 1つのオーディオサンプルの長さ（3秒分）
-            "batch_size": 12,             # バッチサイズ
+            "batch_size": 6,             # バッチサイズ
             "num_workers": 1             # データローダーのワーカー数
         },
         val_params={
             "filelist_path": r"C:\Users\user\Desktop\git\WavTokenizer\data\file_list.txt",  # 検証データのファイルリストパス
             "sampling_rate": 48000,      # サンプリングレート(Hz)
             "num_samples": 144000,        # 1つのオーディオサンプルの長さ（3秒分）
-            "batch_size": 12,             # バッチサイズ
+            "batch_size": 6,             # バッチサイズ
             "num_workers": 1             # データローダーのワーカー数
         }
     )
@@ -69,7 +65,7 @@ if __name__ == '__main__':
     # モデル全体の設定
     model = WavTokenizer(
         sample_rate=48000,               # サンプリングレート(Hz)
-        initial_learning_rate=0.001,      # 初期学習率
+        initial_learning_rate=0.0001,      # 初期学習率
         mel_loss_coeff=45,               # メルスペクトログラム損失の係数
         mrd_loss_coeff=1.0,              # Multi-Resolution Discriminator損失の係数
         num_warmup_steps=0,              # ウォームアップステップ数
@@ -77,7 +73,7 @@ if __name__ == '__main__':
         evaluate_utmos=True,             # UTMOSスコアを評価するかどうか
         evaluate_pesq=True,              # PESQスコアを評価するかどうか
         evaluate_periodicty=True,        # 周期性を評価するかどうか
-        resume=True,                    # 学習を再開するかどうか
+        resume=False,                    # 学習を再開するかどうか
         resume_config = r"C:\Users\user\Desktop\git\WavTokenizer\configs\48hz.yaml",  # 再開用の設定ファイル
         resume_model = r"C:\Users\user\Desktop\git\WavTokenizer\models\last.ckpt",  # 再開用のモデルチェックポイント
         feature_extractor=feature_extractor,
@@ -114,9 +110,9 @@ if __name__ == '__main__':
         logger=logger,                   
         callbacks=callbacks,              
         max_steps=20000000,             # 最大トレーニングステップ数
-        limit_val_batches=36,           # 検証時のバッチ数制限
+        limit_val_batches=1,           # 検証時のバッチ数制限
         accelerator="gpu",              # 使用するアクセラレータ（GPU）
-        gpus = [1],                      # 使用するGPUの数
+        gpus = [0],                      # 使用するGPUの数
         log_every_n_steps=1             # ログを出力するステップ間隔
     )
 

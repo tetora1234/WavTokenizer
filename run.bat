@@ -2,4 +2,4 @@
 :: infer.pyをPythonで実行
 python infer.py
 
-pause
+:: pause

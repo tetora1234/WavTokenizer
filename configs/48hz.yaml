@@ -7,21 +7,21 @@ data:
       filelist_path: "C:\\Users\\user\\Desktop\\git\\WavTokenizer\\data\\file_list.txt"
       sampling_rate: 48000
       num_samples: 144000
-      batch_size: 10
+      batch_size: 12
       num_workers: 1
 
     val_params:
       filelist_path: "C:\\Users\\user\\Desktop\\git\\WavTokenizer\\data\\file_list.txt"
       sampling_rate: 48000
       num_samples: 144000
-      batch_size: 1
+      batch_size: 12
       num_workers: 1
 
 model:
   class_path: decoder.experiment.WavTokenizer
   init_args:
     sample_rate: 48000
-    initial_learning_rate: 2e-4
+    initial_learning_rate: 0.00001
     mel_loss_coeff: 45
     mrd_loss_coeff: 1.0
     num_warmup_steps: 0
