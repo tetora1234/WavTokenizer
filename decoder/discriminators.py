@@ -44,9 +44,9 @@ class DiscriminatorP(nn.Module):
         self,
         period: int,
         in_channels: int = 1,
-        kernel_size: int = 5,
-        stride: int = 3,
-        lrelu_slope: float = 0.1,
+        kernel_size: int = 3,
+        stride: int = 2,
+        lrelu_slope: float = 0.025,
         num_embeddings: int = None,
     ):
         super().__init__()
@@ -145,7 +145,7 @@ class DiscriminatorR(nn.Module):
         channels: int = 64,
         in_channels: int = 1,
         num_embeddings: int = None,
-        lrelu_slope: float = 0.1,
+        lrelu_slope: float = 0.025,
     ):
         super().__init__()
         self.resolution = resolution
